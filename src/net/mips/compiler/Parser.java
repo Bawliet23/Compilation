@@ -1,14 +1,17 @@
 package net.mips.compiler;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.cert.CertificateRevokedException;
 
 public class Parser {
 
-    public Parser(Scanner scanner) throws FileNotFoundException {
-        this.scanner = scanner;
+    private  Scanner scanner ;
+    public Parser(String filename) throws FileNotFoundException {
+        this.scanner = new Scanner(filename);
     }
 
-    Scanner scanner = new Scanner("E:/projects/Compilateur_Like_Pascal/src/net/mips/compiler/sc.txt");
+
 
     public Scanner getScanner() {
         return scanner;
@@ -18,9 +21,40 @@ public class Parser {
         this.scanner = scanner;
     }
 
-    public void testAccept(Tokens t, CodesErr c){
+    public void testAccept(Tokens t, CodesErr c) throws IOException {
+        if (this.scanner.getSymbCour().getToken().equals(t)){
+            this.scanner.symSuivant();
+        }else{
+            Erreur(c);
+        }
+    }
+    private void Erreur(CodesErr err){
+        err.getMessage();
+    }
+    private void  Program() throws IOException {
+        testAccept(Tokens.PROGRAM_TOKEN,CodesErr.PROGRAM_ERR);
+        testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);
+        testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
+        //Block();
+        testAccept(Tokens.PNT_TOKEN,CodesErr.PNT_ERR);
+
 
     }
+    private  void Consts() throws IOException {
+        testAccept(Tokens.CONST_TOKEN,CodesErr.CONST_ERR);
+        testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);
+        testAccept(Tokens.AFFEC_TOKEN,CodesErr.AFFEC_ERR);
+        testAccept(Tokens.NUM_TOKEN,CodesErr.NUM_ERR);
+        testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
+        testAccept(Tokens.BRL_TOKEN,CodesErr.BRL_ERR);
+        testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);
+        testAccept(Tokens.AFFEC_TOKEN,CodesErr.AFFEC_ERR);
+        testAccept(Tokens.NUM_TOKEN,CodesErr.NUM_ERR);
+        testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
+        testAccept(Tokens.BRR_TOKEN,CodesErr.BRR_ERR);
 
+
+
+    }
 
 }

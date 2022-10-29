@@ -17,7 +17,7 @@ public class Scanner {
     private char carCour;
     private FileReader fluxSour;
 
-    public static int EOF ='\uffff';
+    public final static int EOF ='\uffff';
 
     public Scanner(String filename) throws FileNotFoundException {
         File f = new File(filename);
@@ -72,17 +72,15 @@ public class Scanner {
        this.carCour = (char)this.fluxSour.read();
     }
     public void lireMot() throws IOException {
-//        this.symbCour.setNom(this.symbCour.getNom()+this.carCour);
         do{
             this.symbCour.setNom(this.symbCour.getNom()+this.carCour);
             lireCar();
-        }while(!Character.isWhitespace(this.carCour) && this.carCour!=Scanner.EOF  && Character.isLetterOrDigit(this.carCour) );
+        }while(Character.isLetterOrDigit(this.carCour) );
         codeLex(this.symbCour.getNom());
     }
 
     public void lireNumber() throws IOException {
-//        this.symbCour.setNom(this.symbCour.getNom()+this.carCour);
-        while(!Character.isWhitespace(this.carCour) && Character.isLetterOrDigit(this.carCour) && this.carCour !=Scanner.EOF){
+        while(Character.isLetterOrDigit(this.carCour)){
             this.symbCour.setNom(this.symbCour.getNom()+this.carCour);
             lireCar();
             if(Character.isLetter(this.carCour)){
@@ -94,43 +92,46 @@ public class Scanner {
         this.symbCour.setToken(Tokens.NUM_TOKEN);
     }
 public void  symSuivant() throws IOException {
-        while (this.carCour!=Scanner.EOF) {
+            this.symbCour=new Symboles();
             lireCar();
             while (Character.isWhitespace(this.carCour)) {
                 lireCar();
             }
             if (Character.isDigit(this.carCour)) {
                 lireNumber();
-            } else if (Character.isLetterOrDigit(this.carCour)) {
+            }else if (Character.isLetterOrDigit(this.carCour)) {
                 lireMot();
             }
-            System.out.println(this.getSymbCour().toString());
             switch (this.carCour){
                 case '+':this.symbCour.setNom("+");
                 this.symbCour.setToken(Tokens.PLUS_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                 break;
                 case '=':this.symbCour.setNom("=");
                     this.symbCour.setToken(Tokens.AFFEC_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
                 case ';':this.symbCour.setNom(";");
                     this.symbCour.setToken(Tokens.PVIR_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
+                    break;
+                case '{':this.symbCour.setNom("{");
+                    this.symbCour.setToken(Tokens.BRL_TOKEN);
+                    break;
+                case '}':this.symbCour.setNom("}");
+                    this.symbCour.setToken(Tokens.BRR_TOKEN);
                     break;
 
-                case '-':this.symbCour.setNom(";");
+                case '-':this.symbCour.setNom("-");
                     this.symbCour.setToken(Tokens.MOINS_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
-                case '*':this.symbCour.setNom(";");
+                case '*':this.symbCour.setNom("*");
                     this.symbCour.setToken(Tokens.MUL_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
-                case '/':this.symbCour.setNom(";");
+                case '/':this.symbCour.setNom("/");
                     this.symbCour.setToken(Tokens.DIV_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
+//                case (char) EOF:this.symbCour.setNom("EOF");
+//                        this.symbCour.setToken(Tokens.EOF_TOKEN);
+//                    System.out.println(this.getSymbCour().toString());
+//                    break;
 //                case "==":this.symbCour.setNom(";");
 //                    this.symbCour.setToken(Tokens.EG_TOKEN);
 //                    System.out.println(this.getSymbCour().toString());
@@ -139,13 +140,11 @@ public void  symSuivant() throws IOException {
 //                    this.symbCour.setToken(Tokens.DIFF_TOKEN);
 //                    System.out.println(this.getSymbCour().toString());
 //                    break;
-                case '<':this.symbCour.setNom(";");
+                case '<':this.symbCour.setNom("<");
                     this.symbCour.setToken(Tokens.INF_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
-                case '>':this.symbCour.setNom(";");
+                case '>':this.symbCour.setNom(">");
                     this.symbCour.setToken(Tokens.SUP_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
 //                case "<=":this.symbCour.setNom(";");
 //                    this.symbCour.setToken(Tokens.INFEG_TOKEN);
@@ -155,29 +154,27 @@ public void  symSuivant() throws IOException {
 //                    this.symbCour.setToken(Tokens.SUPEG_TOKEN);
 //                    System.out.println(this.getSymbCour().toString());
 //                    break;
-                case ',':this.symbCour.setNom(";");
+                case ',':this.symbCour.setNom(",");
                     this.symbCour.setToken(Tokens.VIR_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
-                case '.' :this.symbCour.setNom(";");
+                case '.' :this.symbCour.setNom(".");
                     this.symbCour.setToken(Tokens.PNT_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
-                case '(':this.symbCour.setNom(";");
+                case '(':this.symbCour.setNom("(");
                     this.symbCour.setToken(Tokens.PARG_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
 
-                    case ')':this.symbCour.setNom(";");
+                    case ')':this.symbCour.setNom(")");
                     this.symbCour.setToken(Tokens.PARD_TOKEN);
-                    System.out.println(this.getSymbCour().toString());
                     break;
+                case (char) EOF :
+                    this.symbCour.setNom("EOF");
+                    this.symbCour.setToken(Tokens.EOF_TOKEN);
+                    break;
+
             }
-            this.symbCour.setToken(null);
-            this.symbCour.setNom("");
         }
 
-}
 
     public List<Symboles> getMotsCles() {
         return motsCles;
