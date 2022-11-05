@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner("E:/projects/Compilateur_Like_Pascal/src/net/mips/compiler/sc.txt");
-        sc.initMotsCles();
+
         while (sc.getCarCour()!=Scanner.EOF) {
             sc.symSuivant();
             System.out.println(sc.getSymbCour().toString());
