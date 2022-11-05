@@ -14,14 +14,14 @@ public class Parser {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ErreurSyntaxique {
         Parser sc = new Parser("E:/projects/Compilateur_Like_Pascal/src/net/mips/compiler/sc.txt");
         sc.scanner.initMotsCles();
         sc.scanner.lireCar();
-        while (sc.scanner.getCarCour()!=Scanner.EOF) {
+//        while (sc.scanner.getCarCour()!=Scanner.EOF) {
             sc.scanner.symSuivant();
-
-        }
+            sc.Program();
+//        }
 
         }
 
@@ -33,17 +33,19 @@ public class Parser {
         this.scanner = scanner;
     }
 
-    public void testAccept(Tokens t, CodesErr c) throws IOException {
+    public void testAccept(Tokens t, CodesErr c) throws IOException, ErreurSyntaxique {
         if (this.scanner.getSymbCour().getToken().equals(t)){
             this.scanner.symSuivant();
         }else{
             Erreur(c);
         }
     }
-    public void Erreur(CodesErr err){
-        err.getMessage();
+    public void Erreur(CodesErr err) throws ErreurSyntaxique {
+        throw new ErreurSyntaxique( err.getMessage());
+
+
     }
-    public void  Program() throws IOException {
+    public void  Program() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.PROGRAM_TOKEN,CodesErr.PROGRAM_ERR);
         testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);
         testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
@@ -52,50 +54,47 @@ public class Parser {
         testAccept(Tokens.PNT_TOKEN,CodesErr.PNT_ERR);
     }
 
-    public void Block() throws IOException {
+    public void Block() throws IOException, ErreurSyntaxique {
         Consts();
        Vars();
        Insts();
     }
-    public   void Consts() throws IOException {
+    public   void Consts() throws IOException, ErreurSyntaxique {
         if ((this.scanner.getSymbCour().getToken().equals(Tokens.CONST_TOKEN))) {
             testAccept(Tokens.CONST_TOKEN, CodesErr.CONST_ERR);
-            testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-            testAccept(Tokens.AFFEC_TOKEN, CodesErr.AFFEC_ERR);
-            testAccept(Tokens.NUM_TOKEN, CodesErr.NUM_ERR);
-            testAccept(Tokens.PVIR_TOKEN, CodesErr.PVIR_ERR);
-            testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-            testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-            testAccept(Tokens.AFFEC_TOKEN, CodesErr.AFFEC_ERR);
-            testAccept(Tokens.NUM_TOKEN, CodesErr.NUM_ERR);
-            testAccept(Tokens.PVIR_TOKEN, CodesErr.PVIR_ERR);
-            testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+            while (this.scanner.getSymbCour().getToken().equals(Tokens.ID_TOKEN)){
+                testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
+                testAccept(Tokens.AFFEC_TOKEN, CodesErr.AFFEC_ERR);
+                testAccept(Tokens.NUM_TOKEN, CodesErr.NUM_ERR);
+                testAccept(Tokens.PVIR_TOKEN, CodesErr.PVIR_ERR);
+            }
+
         }
     }
 
-    public void Vars() throws IOException {
+    public void Vars() throws IOException, ErreurSyntaxique {
         if ((this.scanner.getSymbCour().getToken().equals(Tokens.VAR_TOKEN))) {
             testAccept(Tokens.VAR_TOKEN, CodesErr.VAR_ERR);
             testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-            testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-            testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
-            testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-            testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+            while (this.scanner.getSymbCour().getToken().equals(Tokens.VIR_TOKEN)){
+                testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
+                testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
+            }
             testAccept(Tokens.PVIR_TOKEN, CodesErr.PVIR_ERR);
         }
     }
 
-    public void Insts() throws IOException {
+    public void Insts() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.BEGIN_TOKEN,CodesErr.BEGIN_ERR);
         Inst();
-        testAccept(Tokens.BRL_TOKEN,CodesErr.BRL_ERR);
-        testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
-        Inst();
-        testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+        while (this.scanner.getSymbCour().getToken().equals(Tokens.PVIR_TOKEN)){
+            testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
+            Inst();
+        }
         testAccept(Tokens.END_TOKEN, CodesErr.END_ERR);
     }
 
-    public void Inst() throws IOException{
+    public void Inst() throws IOException, ErreurSyntaxique {
         switch(this.scanner.getSymbCour().getToken()) {
             case ID_TOKEN:
                 AFFECT();
@@ -119,55 +118,55 @@ public class Parser {
 
     }
 
-    public void AFFECT() throws IOException {
+    public void AFFECT() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
         testAccept(Tokens.AFFEC_TOKEN,CodesErr.AFFEC_ERR);
         EXPR();
     }
-    public void SI() throws IOException{
+    public void SI() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.IF_TOKEN, CodesErr.IF_ERR);
         Cond();
         testAccept(Tokens.THEN_TOKEN, CodesErr.THEN_ERR);
         Inst();
     }
-    public void Tantque() throws IOException{
+    public void Tantque() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.WHILE_TOKEN, CodesErr.WHILE_ERR);
         Cond();
         testAccept(Tokens.DO_TOKEN, CodesErr.DO_ERR);
         Inst();
 
     }
-    public void Ecrire() throws IOException{
+    public void Ecrire() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.WRITE_TOKEN, CodesErr.WRITE_ERR);
         testAccept(Tokens.PARG_TOKEN, CodesErr.PARG_ERR);
         EXPR();
-        testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-        testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
-        EXPR();
-        testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+        while (this.scanner.getSymbCour().getToken().equals(Tokens.VIR_TOKEN)){
+            testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
+            EXPR();
+        }
         testAccept(Tokens.PARD_TOKEN, CodesErr.PARD_ERR);
 
     }
-    public void Lire() throws IOException{
+    public void Lire() throws IOException, ErreurSyntaxique {
         testAccept(Tokens.READ_TOKEN, CodesErr.READ_ERR);
         testAccept(Tokens.PARG_TOKEN, CodesErr.PARG_ERR);
         testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-        testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-        testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
-        testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
-        testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+        while (this.scanner.getSymbCour().getToken().equals(Tokens.VIR_TOKEN)){
+            testAccept(Tokens.VIR_TOKEN, CodesErr.VIR_ERR);
+            testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
+        }
         testAccept(Tokens.PARD_TOKEN, CodesErr.PARD_ERR);
 
 
 
 
     }
-    public void Cond() throws IOException{
+    public void Cond() throws IOException, ErreurSyntaxique {
         EXPR();
         Relop();
         EXPR();
     }
-    public void Relop() throws IOException{
+    public void Relop() throws IOException, ErreurSyntaxique {
         switch (this.scanner.getSymbCour().getToken()) {
             case AFFEC_TOKEN:
                 testAccept(Tokens.AFFEC_TOKEN, CodesErr.AFFEC_ERR);
@@ -190,34 +189,34 @@ public class Parser {
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void EXPR() throws IOException{
+    public void EXPR() throws IOException, ErreurSyntaxique {
         Term();
-        testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-        Addop();
-        Term();
-        testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+        while (this.scanner.getSymbCour().getToken().equals(Tokens.PLUS_TOKEN) || this.scanner.getSymbCour().getToken().equals(Tokens.MOINS_TOKEN) ){
+            Addop();
+            Term();
+        }
 
     }
-    public void Addop() throws IOException{
+    public void Addop() throws IOException, ErreurSyntaxique {
         switch  (this.scanner.getSymbCour().getToken()) {
             case PLUS_TOKEN :
                 testAccept(Tokens.PLUS_TOKEN,CodesErr.PLUS_ERR);
                 break;
-            case DIFF_TOKEN:
+            case MOINS_TOKEN:
                 testAccept(Tokens.MOINS_TOKEN,CodesErr.MOINS_ERR);
                 break;
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void Term() throws IOException{
+    public void Term() throws IOException, ErreurSyntaxique {
         Fact();
-        testAccept(Tokens.BRL_TOKEN, CodesErr.BRL_ERR);
-        Mulop();
-        Term();
-        testAccept(Tokens.BRR_TOKEN, CodesErr.BRR_ERR);
+        while (this.scanner.getSymbCour().getToken().equals(Tokens.MUL_TOKEN) || this.scanner.getSymbCour().getToken().equals(Tokens.DIV_TOKEN) ){
+            Mulop();
+            Term();
+        }
 
     }
-    public void Mulop() throws IOException{
+    public void Mulop() throws IOException, ErreurSyntaxique {
         switch  (this.scanner.getSymbCour().getToken()) {
             case MUL_TOKEN:
                 testAccept(Tokens.MUL_TOKEN,CodesErr.MUL_ERR);
@@ -228,7 +227,7 @@ public class Parser {
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void Fact() throws IOException {
+    public void Fact() throws IOException, ErreurSyntaxique {
         switch  (this.scanner.getSymbCour().getToken()) {
             case ID_TOKEN:
                 testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);

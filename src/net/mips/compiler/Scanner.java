@@ -93,40 +93,51 @@ public class Scanner {
     }
 public void  symSuivant() throws IOException {
             this.symbCour=new Symboles();
-            lireCar();
+//            lireCar();
             while (Character.isWhitespace(this.carCour)) {
                 lireCar();
             }
             if (Character.isDigit(this.carCour)) {
                 lireNumber();
-            }else if (Character.isLetterOrDigit(this.carCour)) {
+                return;
+            }
+            if (Character.isLetterOrDigit(this.carCour)) {
                 lireMot();
+                return;
             }
             switch (this.carCour){
                 case '+':this.symbCour.setNom("+");
                 this.symbCour.setToken(Tokens.PLUS_TOKEN);
+                    lireCar();
                 break;
                 case '=':this.symbCour.setNom("=");
                     this.symbCour.setToken(Tokens.AFFEC_TOKEN);
+                    lireCar();
                     break;
                 case ';':this.symbCour.setNom(";");
                     this.symbCour.setToken(Tokens.PVIR_TOKEN);
+                    lireCar();
                     break;
                 case '{':this.symbCour.setNom("{");
                     this.symbCour.setToken(Tokens.BRL_TOKEN);
+                    lireCar();
                     break;
                 case '}':this.symbCour.setNom("}");
                     this.symbCour.setToken(Tokens.BRR_TOKEN);
+                    lireCar();
                     break;
 
                 case '-':this.symbCour.setNom("-");
                     this.symbCour.setToken(Tokens.MOINS_TOKEN);
+                    lireCar();
                     break;
                 case '*':this.symbCour.setNom("*");
                     this.symbCour.setToken(Tokens.MUL_TOKEN);
+                    lireCar();
                     break;
                 case '/':this.symbCour.setNom("/");
                     this.symbCour.setToken(Tokens.DIV_TOKEN);
+                    lireCar();
                     break;
 //                case (char) EOF:this.symbCour.setNom("EOF");
 //                        this.symbCour.setToken(Tokens.EOF_TOKEN);
@@ -142,9 +153,11 @@ public void  symSuivant() throws IOException {
 //                    break;
                 case '<':this.symbCour.setNom("<");
                     this.symbCour.setToken(Tokens.INF_TOKEN);
+                    lireCar();
                     break;
                 case '>':this.symbCour.setNom(">");
                     this.symbCour.setToken(Tokens.SUP_TOKEN);
+                    lireCar();
                     break;
 //                case "<=":this.symbCour.setNom(";");
 //                    this.symbCour.setToken(Tokens.INFEG_TOKEN);
@@ -156,16 +169,20 @@ public void  symSuivant() throws IOException {
 //                    break;
                 case ',':this.symbCour.setNom(",");
                     this.symbCour.setToken(Tokens.VIR_TOKEN);
+                    lireCar();
                     break;
                 case '.' :this.symbCour.setNom(".");
                     this.symbCour.setToken(Tokens.PNT_TOKEN);
+                    lireCar();
                     break;
                 case '(':this.symbCour.setNom("(");
                     this.symbCour.setToken(Tokens.PARG_TOKEN);
+                    lireCar();
                     break;
 
                     case ')':this.symbCour.setNom(")");
                     this.symbCour.setToken(Tokens.PARD_TOKEN);
+                        lireCar();
                     break;
                 case (char) EOF :
                     this.symbCour.setNom("EOF");
