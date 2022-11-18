@@ -7,14 +7,16 @@ import java.security.cert.CertificateRevokedException;
 
 public class Parser {
 
-    private    Scanner scanner ;
+    protected     ScannerWS scanner ;
     public Parser(String filename) throws FileNotFoundException {
-        this.scanner = new Scanner(filename);
+        this.scanner = new ScannerWS(filename);
 
     }
 
+    public Parser() {
+    }
 
-    public static void main(String[] args) throws IOException, ErreurSyntaxique {
+    public static void main(String[] args) throws IOException, ErreurSyntaxique, ErreurSemantique {
         Parser sc = new Parser("E:/projects/Compilateur_Like_Pascal/src/net/mips/compiler/sc.txt");
         sc.scanner.initMotsCles();
         sc.scanner.lireCar();
@@ -25,11 +27,11 @@ public class Parser {
 
         }
 
-    public Scanner getScanner() {
+    public ScannerWS getScanner() {
         return scanner;
     }
 
-    public void setScanner(Scanner scanner) {
+    public void setScanner(ScannerWS scanner) {
         this.scanner = scanner;
     }
 
@@ -45,7 +47,7 @@ public class Parser {
 
 
     }
-    public void  Program() throws IOException, ErreurSyntaxique {
+    public void  Program() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.PROGRAM_TOKEN,CodesErr.PROGRAM_ERR);
         testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);
         testAccept(Tokens.PVIR_TOKEN,CodesErr.PVIR_ERR);
@@ -54,15 +56,16 @@ public class Parser {
         testAccept(Tokens.PNT_TOKEN,CodesErr.PNT_ERR);
     }
 
-    public void Block() throws IOException, ErreurSyntaxique {
+    public void Block() throws IOException, ErreurSyntaxique, ErreurSemantique {
         Consts();
        Vars();
        Insts();
     }
-    public   void Consts() throws IOException, ErreurSyntaxique {
+    public   void Consts() throws IOException, ErreurSyntaxique, ErreurSemantique {
         if ((this.scanner.getSymbCour().getToken().equals(Tokens.CONST_TOKEN))) {
             testAccept(Tokens.CONST_TOKEN, CodesErr.CONST_ERR);
             while (this.scanner.getSymbCour().getToken().equals(Tokens.ID_TOKEN)){
+//               test_insere(Tokens.ID_TOKEN,ClasseIdf.CONSTANTE,code)
                 testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
                 testAccept(Tokens.AFFEC_TOKEN, CodesErr.AFFEC_ERR);
                 testAccept(Tokens.NUM_TOKEN, CodesErr.NUM_ERR);
@@ -72,7 +75,7 @@ public class Parser {
         }
     }
 
-    public void Vars() throws IOException, ErreurSyntaxique {
+    public void Vars() throws IOException, ErreurSyntaxique, ErreurSemantique {
         if ((this.scanner.getSymbCour().getToken().equals(Tokens.VAR_TOKEN))) {
             testAccept(Tokens.VAR_TOKEN, CodesErr.VAR_ERR);
             testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
@@ -84,7 +87,7 @@ public class Parser {
         }
     }
 
-    public void Insts() throws IOException, ErreurSyntaxique {
+    public void Insts() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.BEGIN_TOKEN,CodesErr.BEGIN_ERR);
         Inst();
         while (this.scanner.getSymbCour().getToken().equals(Tokens.PVIR_TOKEN)){
@@ -94,7 +97,7 @@ public class Parser {
         testAccept(Tokens.END_TOKEN, CodesErr.END_ERR);
     }
 
-    public void Inst() throws IOException, ErreurSyntaxique {
+    public void Inst() throws IOException, ErreurSyntaxique, ErreurSemantique {
         switch(this.scanner.getSymbCour().getToken()) {
             case ID_TOKEN:
                 AFFECT();
@@ -118,25 +121,25 @@ public class Parser {
 
     }
 
-    public void AFFECT() throws IOException, ErreurSyntaxique {
+    public void AFFECT() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
         testAccept(Tokens.AFFEC_TOKEN,CodesErr.AFFEC_ERR);
         EXPR();
     }
-    public void SI() throws IOException, ErreurSyntaxique {
+    public void SI() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.IF_TOKEN, CodesErr.IF_ERR);
         Cond();
         testAccept(Tokens.THEN_TOKEN, CodesErr.THEN_ERR);
         Inst();
     }
-    public void Tantque() throws IOException, ErreurSyntaxique {
+    public void Tantque() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.WHILE_TOKEN, CodesErr.WHILE_ERR);
         Cond();
         testAccept(Tokens.DO_TOKEN, CodesErr.DO_ERR);
         Inst();
 
     }
-    public void Ecrire() throws IOException, ErreurSyntaxique {
+    public void Ecrire() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.WRITE_TOKEN, CodesErr.WRITE_ERR);
         testAccept(Tokens.PARG_TOKEN, CodesErr.PARG_ERR);
         EXPR();
@@ -147,7 +150,7 @@ public class Parser {
         testAccept(Tokens.PARD_TOKEN, CodesErr.PARD_ERR);
 
     }
-    public void Lire() throws IOException, ErreurSyntaxique {
+    public void Lire() throws IOException, ErreurSyntaxique, ErreurSemantique {
         testAccept(Tokens.READ_TOKEN, CodesErr.READ_ERR);
         testAccept(Tokens.PARG_TOKEN, CodesErr.PARG_ERR);
         testAccept(Tokens.ID_TOKEN, CodesErr.ID_ERR);
@@ -161,7 +164,7 @@ public class Parser {
 
 
     }
-    public void Cond() throws IOException, ErreurSyntaxique {
+    public void Cond() throws IOException, ErreurSyntaxique, ErreurSemantique {
         EXPR();
         Relop();
         EXPR();
@@ -189,7 +192,7 @@ public class Parser {
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void EXPR() throws IOException, ErreurSyntaxique {
+    public void EXPR() throws IOException, ErreurSyntaxique, ErreurSemantique {
         Term();
         while (this.scanner.getSymbCour().getToken().equals(Tokens.PLUS_TOKEN) || this.scanner.getSymbCour().getToken().equals(Tokens.MOINS_TOKEN) ){
             Addop();
@@ -208,7 +211,7 @@ public class Parser {
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void Term() throws IOException, ErreurSyntaxique {
+    public void Term() throws IOException, ErreurSyntaxique, ErreurSemantique {
         Fact();
         while (this.scanner.getSymbCour().getToken().equals(Tokens.MUL_TOKEN) || this.scanner.getSymbCour().getToken().equals(Tokens.DIV_TOKEN) ){
             Mulop();
@@ -227,7 +230,7 @@ public class Parser {
             default:Erreur(CodesErr.DEFAULT_ERR);
         }
     }
-    public void Fact() throws IOException, ErreurSyntaxique {
+    public void Fact() throws IOException, ErreurSyntaxique, ErreurSemantique {
         switch  (this.scanner.getSymbCour().getToken()) {
             case ID_TOKEN:
                 testAccept(Tokens.ID_TOKEN,CodesErr.ID_ERR);

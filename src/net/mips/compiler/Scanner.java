@@ -29,22 +29,7 @@ public class Scanner {
         this.symbCour= new Symboles();
     }
     public void initMotsCles(){
-//        this.motsCles.add(new Symboles(Tokens.AFFEC_TOKEN,"="));
-//        this.motsCles.add(new Symboles(Tokens.PLUS_TOKEN,"+"));
-//        this.motsCles.add(new Symboles(Tokens.MOINS_TOKEN,"-"));
-//        this.motsCles.add(new Symboles(Tokens.MUL_TOKEN,"*"));
-//        this.motsCles.add(new Symboles(Tokens.DIV_TOKEN,"/"));
-//        this.motsCles.add(new Symboles(Tokens.EG_TOKEN,"=="));
-//        this.motsCles.add(new Symboles(Tokens.DIFF_TOKEN,"!="));
-//        this.motsCles.add(new Symboles(Tokens.INF_TOKEN,"<"));
-//        this.motsCles.add(new Symboles(Tokens.SUP_TOKEN,">"));
-//        this.motsCles.add(new Symboles(Tokens.INFEG_TOKEN,"<="));
-//        this.motsCles.add(new Symboles(Tokens.SUPEG_TOKEN,">="));
-//        this.motsCles.add(new Symboles(Tokens.VIR_TOKEN,","));
-//        this.motsCles.add(new Symboles(Tokens.PVIR_TOKEN,";"));
-//        this.motsCles.add(new Symboles(Tokens.PNT_TOKEN,"."));
-//        this.motsCles.add(new Symboles(Tokens.PARD_TOKEN,")"));
-//        this.motsCles.add(new Symboles(Tokens.PARG_TOKEN,"("));
+
         this.motsCles.add(new Symboles(Tokens.BEGIN_TOKEN,"begin"));
         this.motsCles.add(new Symboles(Tokens.END_TOKEN,"end"));
         this.motsCles.add(new Symboles(Tokens.IF_TOKEN,"if"));
@@ -93,7 +78,6 @@ public class Scanner {
     }
 public void  symSuivant() throws IOException {
             this.symbCour=new Symboles();
-//            lireCar();
             while (Character.isWhitespace(this.carCour)) {
                 lireCar();
             }

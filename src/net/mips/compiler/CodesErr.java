@@ -34,6 +34,9 @@ public enum CodesErr {
     PARG_ERR("Mot cle ( attendu!! "),
     PARD_ERR("Mot cle ) attendu!! "),
     READ_ERR("Mot cle Read attendu!! "),
+    PROGRAMMEID_ERR(" nom de programme non autorisé"),
+    IDNOTFOUND_ERR(" identificateur  non déclaré"),
+    DOUBLEDECLARATION_ERR("double déclaration")
     ;
 
 
